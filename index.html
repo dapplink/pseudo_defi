@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+	 body {font-family: Arial, Helvetica, sans-serif;}
+	 form {border: 3px solid #f1f1f1;}
+
+	 input[type=text], input[type=password] {
+	     width: 100%;
+	     padding: 12px 20px;
+	     margin: 8px 0;
+	     display: inline-block;
+	     border: 1px solid #ccc;
+	     box-sizing: border-box;
+	 }
+
+	 button {
+	     background-color: #4CAF50;
+	     color: white;
+	     padding: 14px 20px;
+	     margin: 8px 0;
+	     border: none;
+	     cursor: pointer;
+	     width: 100%;
+	 }
+
+	 button:hover {
+	     opacity: 0.8;
+	 }
+
+	 .cancelbtn {
+	     width: auto;
+	     padding: 10px 18px;
+	     background-color: #f44336;
+	 }
+
+	 .imgcontainer {
+	     text-align: center;
+	     /* margin: 24px 0 12px 0; */
+	     margin: 12px;
+	 }
+
+	 img.avatar {
+	     width: 40%;
+	     border-radius: 50%;
+	 }
+
+	 .container {
+	     padding: 16px;
+	 }
+
+	 span.psw {
+	     float: right;
+	     padding-top: 16px;
+	 }
+
+	 /* Change styles for span and cancel button on extra small screens */
+	 @media screen and (max-width: 300px) {
+	     span.psw {
+		 display: block;
+		 float: none;
+	     }
+	     .cancelbtn {
+		 width: 100%;
+	     }
+	 }
+	 svg {
+	     height: 30vh;
+	     width: 100%;
+	 }
+	 .line {fill: none;stroke: red; stroke-width:3px;}
+	 #operation-success {
+	     display: none;
+	     top:0;
+	     position: fixed;
+	     color: white;
+	     background-color: #4CAF50;
+	     width: 100%;
+	     height: 70px;
+	     text-align: center;
+	     line-height: 70px;
+	     z-index: 999;
+	 }
+	 #operation-error {
+	     display: none;
+	     top:0;
+	     position: fixed;
+	     color: white;
+	     background-color: rgb(220, 53, 69);
+	     width: 100%;
+	     height: 70px;
+	     text-align: center;
+	     line-height: 70px;
+	     z-index: 999;
+	 }
+	 #eth-send-button,
+	 #pdt-send-button {
+	     background-color: #009688;
+	 }
+	</style>
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<script src="ethereumjs-tx.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<script src="abi.js"></script>
+    </head>
+    <body>
+
+	<h2>Pseudo DeFi | Fully decentralized trade terminal (for demonstration purposes only)</h2>
+
+	<form style="overflow: auto;" onsubmit="return false;">
+	    <div class="imgcontainer">
+		<svg></svg>
+	    </div>
+
+	    <div class="container">
+
+		<section id="login-section">
+		    <label for="psw"><b>Private key:</b></label>
+		    <input type="password" placeholder="Private key" name="psw" id="private-key-input" required>
+		    <button id="enter-button">Enter</button>
+		</section>
+
+		<section id="controller-section">
+		    <div>
+			<label for="address"><b>Account</b></label>
+			<input type="text" name="address" placeholder="&mdash;" id="address" readonly>
+		    </div>
+
+		    <div style="width: 48%; display: inline-block; float: left;">
+			<label for="eth-balance"><b>Balance ETH</b></label>
+			<input type="text" name="eth-balance" placeholder="&mdash;" id="eth-balance" readonly>
+		    </div>
+
+		    <div style="width: 48%; display: inline-block; float: right;">
+			<label for="pdt-balance"><b>Balance PDT</b></label>
+			<input type="text" name="pdt-balance" placeholder="&mdash;" id="pdt-balance" readonly>
+		    </div>
+
+		    <div style="width: 48%; display: inline-block; float: left;">
+			<label for="eth-exchange"><b>Change ETH to PDT</b></label>
+			<input type="text" placeholder="ETH" name="eth-exchange" id="eth-exchange-input">
+			<button id="eth-exchange-button">Change ETH to PDT</button>
+		    </div>
+		    
+		    <div style="width: 48%; display: inline-block;float: right;">
+			<label for="pdt-exchange"><b>Change PDT to ETH</b></label>
+			<input type="text" placeholder="PDT" name="pdt-exchange" id="pdt-exchange-input">
+			<button id="pdt-exchange-button">Change PDT to ETH</button>
+		    </div>
+		    <article style="overflow:auto; width:100%; padding-top: 50px;">
+			<div style="width: 48%; display: inline-block; float: left;">
+			    <label for="eth-send-amount-input"><b>Amount ETH</b></label>
+			    <input type="text" name="eth-send-amount-input" placeholder="ETH" id="eth-send-amount-input">
+			</div>
+
+			<div style="width: 48%; display: inline-block; float: right;">
+			    <label for="pdt-send-amount-input"><b>Amount PDT</b></label>
+			    <input type="text" name="pdt-send-amount-input" placeholder="PDT" id="pdt-send-amount-input">
+			</div>
+
+			<div style="width: 48%; display: inline-block; float: left;">
+			    <label for="eth-send-address-input"><b>Send ETH to the address</b></label>
+			    <input type="text" placeholder="Address" name="eth-send-address-input" id="eth-send-address-input">
+			    <button id="eth-send-button">Send ETH</button>
+			</div>
+			
+			<div style="width: 48%; display: inline-block;float: right;">
+			    <label for="pdt-send-address-input"><b>Send PDT to the address</b></label>
+			    <input type="text" placeholder="Address" name="pdt-send-address-input" id="pdt-send-address-input">
+			    <button id="pdt-send-button">Send PDT</button>
+			</div>
+		    </article>
+		    <article style="overflow:auto; width:100%; padding-top: 50px;">
+			<div>
+			    <label for="smart-contract-address"><b>Smart contract address</b></label>
+			    <input type="text" name="smart-contract-address" placeholder="&mdash;" id="smart-contract-address" readonly>
+			    <button style="background-color: gray;" id="open-etherscan-button">Open with Etherscan</button>
+			</div>
+		    </article>
+		</section>
+		
+	    </div>
+
+	    <div class="container">
+		<span class="psw">This application is running on the Rinkeby test network</span>
+	    </div>
+	</form>
+	<section id="operation-success"></section>
+	<section id="operation-error"></section>
+	<script src="app.js"></script>
+    </body>
+</html>
