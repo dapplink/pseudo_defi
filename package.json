@@ -1,0 +1,22 @@
+{
+  "name": "pseudo-defi",
+  "version": "1.0.0",
+  "description": "Fully decentralized trade terminal",
+  "main": "app.js",
+  "scripts": {
+    "start": "http-server -c-1"
+  },
+  "keywords": [
+    "pwa",
+    "progressive",
+    "web",
+    "app",
+    "ethereum",
+    "blockchain"
+  ],
+  "author": "Dapplink Developer Team",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
+}
