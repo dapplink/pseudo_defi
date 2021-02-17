@@ -311,5 +311,16 @@ function Controller() {
     return my;
 }
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(function () {
+      console.log('Service worker registered!');
+    })
+    .catch(function(err) {
+      console.log(err);
+    });
+}
+
 let controller = Controller();
 let chart = Chart();
